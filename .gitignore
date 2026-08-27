@@ -1,0 +1,14 @@
+Ref
+.cursor
+.venv/
+backend/data/raw/**
+!backend/data/raw/README.md
+backend/data/labels.csv
+backend/uploads/
+backend/*.db
+backend/**/__pycache__/
+backend/.venv/
+backend/venv/
+*.pyc
+.env
+sample_images/
