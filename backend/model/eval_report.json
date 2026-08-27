@@ -1,0 +1,150 @@
+{
+  "n_evaluated": 205,
+  "roc_auc": 0.6411428571428571,
+  "precision": 0.75,
+  "recall": 0.14285714285714285,
+  "f1": 0.24,
+  "confusion_matrix": {
+    "labels": [
+      "normal(0)",
+      "anomaly(1)"
+    ],
+    "matrix": [
+      [
+        95,
+        5
+      ],
+      [
+        90,
+        15
+      ]
+    ]
+  },
+  "failure_cases_sample": [
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Undistorted/DSCN0338.JPG",
+      "label": "normal",
+      "predicted_anomaly": true,
+      "decision": -0.0002639446440411142
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Undistorted/CIMG0279.JPG",
+      "label": "normal",
+      "predicted_anomaly": true,
+      "decision": -0.00898667147439064
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Artificially-Blurred/DiskR10_IMG_7722.JPG",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.012902227898608676
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Artificially-Blurred/DiskR8_27.jpg",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.0345428504976944
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Naturally-Blurred/DSC00526.JPG",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.033974887153931654
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Naturally-Blurred/DSC_0026.jpg",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.022261003325783124
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Naturally-Blurred/CIMG8255.JPG",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.016212538827867773
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Artificially-Blurred/GaussianH10x10_DSC05291.JPG",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.027694877383145355
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Naturally-Blurred/DSCN0905.JPG",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.026094819213222153
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Artificially-Blurred/GaussianS1_P1012538.JPG",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.028463730051336122
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Artificially-Blurred/GaussianH5x5_P1145801.JPG",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.023106580377737385
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Naturally-Blurred/DSCN1015.JPG",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.03359918424986136
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Artificially-Blurred/GaussianH1x50S250_30.jpg",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.011637310783152166
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Naturally-Blurred/DSC07032.jpg",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.029983407250351646
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Artificially-Blurred/MotionL50H90_10.jpg",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.017270345690590105
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Naturally-Blurred/CIMG0474.JPG",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.012108198053918995
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Naturally-Blurred/CIMG0215.JPG",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.012514365828272922
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Artificially-Blurred/MotionL20H45_DSC05279.JPG",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.03511192781694089
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Naturally-Blurred/DSCN0903.JPG",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.031050331208862858
+    },
+    {
+      "image_path": "../sample_images/CERTH_ImageBlurDataset/TrainingSet/Naturally-Blurred/DSC_0245.jpg",
+      "label": "blur",
+      "predicted_anomaly": false,
+      "decision": 0.0174212327455332
+    }
+  ],
+  "limitations": [
+    "IsolationForest fitted on normal embeddings only (MobileNetV2 ImageNet).",
+    "Capped subsets of CERTH / SIDD / koniq \u2014 not full-benchmark scores.",
+    "Exposure labels from brightness thresholds can be circular with CV rules."
+  ]
+}
