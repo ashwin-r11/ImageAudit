@@ -165,6 +165,24 @@ ImageAudit/
 
 ---
 
+## Continuous integration
+
+GitHub Actions runs on every push and pull request to `main`.
+
+| Workflow | What it checks |
+|----------|----------------|
+| [CI](.github/workflows/ci.yml) | Frontend `npm ci` + `next build`; backend `pip install` + FastAPI import smoke; Gitleaks secret scan; `npm audit` and `pip-audit` (high/critical only) |
+| [CodeQL](.github/workflows/codeql.yml) | Static analysis for JavaScript/TypeScript and Python (PR, push, weekly) |
+| [Dependabot](.github/dependabot.yml) | Weekly dependency update PRs for npm, pip, and GitHub Actions |
+
+**Expected runtime:** ~8–12 minutes on a cold run (backend PyTorch install is the slowest step); faster with pip/npm caches.
+
+**Phase 2 (not yet enforced):** ESLint, strict TypeScript (`tsc --noEmit`), and removing `ignoreBuildErrors` in `frontend/next.config.mjs`.
+
+To require checks before merge, enable branch protection on `main` and select the `CI` workflow jobs.
+
+---
+
 ## Deployment
 
 Local Docker Compose / cloud is a **next step**. This pass targets a reproducible local MVP (backend + frontend).
