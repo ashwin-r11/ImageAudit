@@ -4,7 +4,7 @@ python-multipart==0.0.20
 sqlalchemy==2.0.36
 pydantic==2.10.4
 numpy==2.2.1
-opencv-python-headless==4.10.0.84
+opencv-python-headless==5.0.0.93
 torch==2.5.1
 torchvision==0.20.1
 scikit-learn==1.6.0
