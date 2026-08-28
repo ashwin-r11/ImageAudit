@@ -3,7 +3,7 @@ const { withWorkflow } = pkg
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-
+  output: "standalone",
   cacheComponents: true,
   typescript: {
     ignoreBuildErrors: true,

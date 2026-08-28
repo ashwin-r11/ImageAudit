@@ -61,7 +61,25 @@ Blur penalties are weighted heavier than other CV issues so soft images don’t 
 
 ## Quick start
 
-### Backend (`:8000`)
+### Docker Compose (recommended)
+
+Requires [Docker Engine](https://docs.docker.com/engine/install/) with Compose v2.
+
+```bash
+git clone <repo-url>
+cd ImageAudit
+docker compose up --build
+```
+
+- UI: [http://localhost:3000](http://localhost:3000)
+- API health: [http://localhost:8000/health](http://localhost:8000/health)
+- Swagger: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+The browser calls the API at `http://localhost:8000` (host-mapped ports). SQLite and uploads persist in Docker volumes; the anomaly detector artifact is read from `./backend/model` (fit locally if you need `model_loaded: true` — see [Data, training & evaluation](#data-training--evaluation)).
+
+Stop: `docker compose down` (add `-v` to remove volumes).
+
+### Backend (`:8000`) — local venv
 
 Use the project **`.venv`** (system `uvicorn` → `No module named 'cv2'`).
 
@@ -138,6 +156,7 @@ Details & limitations: [docs/data-and-evaluation.md](docs/data-and-evaluation.md
 ImageAudit/
   README.md                 # you are here
   docs/                     # architecture, API, ML, data, setup
+  docker-compose.yml        # backend + frontend stack
   backend/
     app/                    # FastAPI + CV + embeddings + anomaly merge
     app/training/           # sample / fit / evaluate scripts
@@ -172,10 +191,11 @@ GitHub Actions runs on every push and pull request to `main`.
 | Workflow | What it checks |
 |----------|----------------|
 | [CI](.github/workflows/ci.yml) | Frontend `npm ci` + `next build`; backend `pip install` + FastAPI import smoke; Gitleaks secret scan; `npm audit` and `pip-audit` (high/critical only) |
+| [Docker](.github/workflows/docker.yml) | Build backend + frontend images, `docker compose up`, smoke-test `/health`, frontend, and `POST /analyze` |
 | [CodeQL](.github/workflows/codeql.yml) | Static analysis for JavaScript/TypeScript and Python (PR, push, weekly) |
-| [Dependabot](.github/dependabot.yml) | Weekly dependency update PRs for npm, pip, and GitHub Actions |
+| [Dependabot](.github/dependabot.yml) | Weekly dependency update PRs for npm, pip, Docker base images, and GitHub Actions |
 
-**Expected runtime:** ~8–12 minutes on a cold run (backend PyTorch install is the slowest step); faster with pip/npm caches.
+**Expected runtime:** ~8–12 minutes for CI on a cold run (backend PyTorch install is the slowest step); faster with pip/npm caches. Docker smoke adds ~15–30 minutes on first run (image build + MobileNet prefetch); faster with BuildKit layer cache on repeat runs.
 
 **Phase 2 (not yet enforced):** ESLint, strict TypeScript (`tsc --noEmit`), and removing `ignoreBuildErrors` in `frontend/next.config.mjs`.
 
@@ -185,7 +205,7 @@ To require checks before merge, enable branch protection on `main` and select th
 
 ## Deployment
 
-Local Docker Compose / cloud is a **next step**. This pass targets a reproducible local MVP (backend + frontend).
+**Local / reproducible:** use [Docker Compose](#docker-compose-recommended) (`docker compose up --build`). Cloud hosting (e.g. container registry + orchestrator) is a future step.
 
 ---
 

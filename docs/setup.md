@@ -1,10 +1,17 @@
 # Local setup guide
 
-ImageAudit runs as **two processes**: FastAPI backend (`:8000`) and Next.js frontend (`:3000`). Docker/cloud deployment is a later step.
+ImageAudit runs as **two processes**: FastAPI backend (`:8000`) and Next.js frontend (`:3000`). You can run them with **Docker Compose** (recommended for reproducibility) or with a local Python venv + Node.js.
 
 ---
 
 ## Prerequisites
+
+**Docker path (recommended):**
+
+- [Docker Engine](https://docs.docker.com/engine/install/) with Compose v2
+- ~4 GB free disk for images (PyTorch CPU backend is large)
+
+**Local venv path:**
 
 - **Python** 3.11+ (3.12 works)
 - **Node.js** 18+ (for the frontend)
@@ -12,7 +19,47 @@ ImageAudit runs as **two processes**: FastAPI backend (`:8000`) and Next.js fron
 
 ---
 
-## 1. Backend
+## 0. Docker Compose (recommended)
+
+From the repository root:
+
+```bash
+docker compose up --build
+```
+
+| URL | Purpose |
+|-----|---------|
+| [http://localhost:3000](http://localhost:3000) | Next.js UI |
+| [http://localhost:8000/health](http://localhost:8000/health) | API health + `model_loaded` |
+| [http://localhost:8000/docs](http://localhost:8000/docs) | Swagger UI |
+
+**How it works:**
+
+- The **browser** talks to the API at `http://localhost:8000` (not the internal Docker service name). Ports `3000` and `8000` are mapped to the host.
+- SQLite and uploads persist in named volumes (`imageaudit-db`, `imageaudit-uploads`).
+- `./backend/model` is bind-mounted read-only so a locally fitted `anomaly_detector.joblib` is used when present.
+
+**Model artifact:** `backend/model/anomaly_detector.joblib` is not in git. Without it, `/health` reports `"model_loaded": false` but CV-based analysis still works. Fit the detector locally (see [data-and-evaluation.md](data-and-evaluation.md)), then restart Compose.
+
+**Stop:**
+
+```bash
+docker compose down        # keep volumes
+docker compose down -v     # remove db + upload volumes
+```
+
+**Troubleshooting:**
+
+| Symptom | Fix |
+|---------|-----|
+| Port 3000 or 8000 in use | Stop other services or change host ports in `docker-compose.yml` |
+| `model_loaded: false` | Fit `anomaly_detector.joblib` under `backend/model/` and restart |
+| Frontend cannot reach API | Keep `NEXT_PUBLIC_API_BASE_URL=http://localhost:8000` (default build arg) |
+| Slow first `/analyze` | MobileNet weights are prefetched at image build; rebuild if the cache was cleared |
+
+---
+
+## 1. Backend (local venv)
 
 ### Create and activate the virtualenv
 
@@ -83,7 +130,7 @@ If `model_loaded` is false, fit the detector first (see [data-and-evaluation.md]
 
 ---
 
-## 2. Frontend
+## 2. Frontend (local Node.js)
 
 Scaffolded with **v0.dev**; lives in `frontend/`. Prefer fixing API mismatches on the **backend**.
 
@@ -114,6 +161,7 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
 | Frontend CORS errors | API not allowing origin | Ensure API CORS includes `http://localhost:3000` (default in `main.py`) |
 | `Cannot find package 'workflow'` | Incomplete frontend install | `npm install workflow --legacy-peer-deps` |
 | PowerShell `PYTHONPATH` ignored | Used `set` syntax | Use `$env:PYTHONPATH = "."` |
+| Docker build fails on frontend | Missing `public/` or standalone output | Ensure `frontend/next.config.mjs` has `output: "standalone"` |
 
 Find process on port 8000 (PowerShell):
 
@@ -127,6 +175,15 @@ Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue |
 
 ## 4. Suggested first-time checklist
 
+**Docker:**
+
+1. `docker compose up --build`
+2. Open `/health` — note `model_loaded`
+3. Open UI at `:3000` and upload an image
+4. (Optional) Fit detector locally, restart Compose for full anomaly scoring
+
+**Local venv:**
+
 1. Create `.venv` and `pip install -r backend/requirements.txt`
 2. Ensure `backend/model/anomaly_detector.joblib` exists (fit if needed)
 3. Start backend → confirm `/health`
@@ -137,6 +194,6 @@ Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue |
 
 ## 5. Deployment note
 
-Local Docker Compose / cloud hosting is **not** part of the current MVP pass. Documented next step once the local pipeline is solid.
+Use **Docker Compose** for a reproducible local stack (`docker compose up --build`). Cloud hosting is a future step.
 
 Next: [Architecture](architecture.md) · [API](api.md)
